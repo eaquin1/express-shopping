@@ -10,6 +10,11 @@ router.get("/", (req, res, next) => {
 router.post("/", (req, res, next) => {
     try {
         if (!req.body.name) throw new ExpressError("Item is required", 400);
+
+        for (let i of items) {
+            if (i["name"] == req.body.name)
+                throw new ExpressError("Item already exists", 403);
+        }
         const newItem = { name: req.body.name, price: req.body.price };
         items.push(newItem);
         return res
