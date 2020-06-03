@@ -12,6 +12,8 @@ beforeEach(() => {
 
 afterEach(() => {
     items.length = 0;
+    // redeclaring items causes patch test to fail
+    //items = [];
 });
 
 describe("GET /items", () => {
@@ -68,7 +70,6 @@ describe("DELETE /items/:name", () => {
 
 describe("PATCH /items/:name", () => {
     it("updates a single item", async () => {
-        console.log("name", item.name);
         const resp = await request(app)
             .patch(`/items/${item.name}`)
             .send({ name: "pizza", price: 34 });
