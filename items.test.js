@@ -11,7 +11,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-    items = [];
+    items.length = 0;
 });
 
 describe("GET /items", () => {
@@ -31,7 +31,7 @@ describe("GET /items/:name", () => {
         expect(resp.body).toEqual(item);
     });
 
-    xit("responds with 404 if item doesn't exist", async () => {
+    it("responds with 404 if item doesn't exist", async () => {
         const resp = await request(app).get("/items/cookies");
         expect(resp.statusCode).toBe(404);
     });
@@ -45,11 +45,11 @@ describe("POST /items", () => {
         expect(resp.statusCode).toBe(201);
         expect(resp.body.name).toEqual("spaghetti");
     });
-    xit("responds with 403 if the item already exists", async () => {
+    it("responds with 403 if the item already exists", async () => {
         const resp = await request(app).post("/items").send(item);
         expect(resp.statusCode).toBe(403);
     });
-    xit("responds with 400 if data is not sent", async () => {
+    it("responds with 400 if data is not sent", async () => {
         const resp = await request(app).post("/items").send({});
         expect(resp.statusCode).toBe(400);
     });
@@ -60,31 +60,23 @@ describe("DELETE /items/:name", () => {
         const resp = await request(app).delete(`/items/${item.name}`);
         expect(resp.statusCode).toBe(200);
     });
-    xit("responds 404 with if item not found", async () => {
-        const resp = await request(app).delete("/items/hotdog");
+    it("responds 404 with if item not found", async () => {
+        const resp = await request(app).delete("/items/pizza");
         expect(resp.statusCode).toBe(404);
     });
 });
 
 describe("PATCH /items/:name", () => {
-    //    it("updates a single item", async () => {
-    //         console.log("name", item.name);
-    //         const resp = await request(app)
-    //             .patch(`/items/${item.name}`)
-    //             .send({ name: "pizza", price: 34 });
-    //         expect(resp.statusCode).toBe(200);
-    //         expect(resp.body).toEqual({ name: "pizza", price: 34 });
-    //     });
-    test("Updates a single item", async function () {
-        const response = await request(app).patch(`/items/${item.name}`).send({
-            name: "Troll",
-        });
-        expect(response.statusCode).toBe(200);
-        expect(response.body.item).toEqual({
-            name: "Troll",
-        });
+    it("updates a single item", async () => {
+        console.log("name", item.name);
+        const resp = await request(app)
+            .patch(`/items/${item.name}`)
+            .send({ name: "pizza", price: 34 });
+        expect(resp.statusCode).toBe(200);
+        expect(resp.body).toEqual({ item: { name: "pizza", price: 34 } });
     });
-    xit("responds with a 404 if it can't find item", async () => {
+
+    it("responds with a 404 if it can't find item", async () => {
         const resp = await request(app)
             .patch("/items/soup")
             .send({ name: "pizza", price: 25 });
